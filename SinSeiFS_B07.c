@@ -362,7 +362,7 @@ static int xmp_chmod(const char *path, mode_t mode)
         return -errno;
 
     const char *desc[] = {path, modeBuff};
-    logFile("INFO", "CHMOD", desc, 2;
+    logFile("INFO", "CHMOD", desc, 2);
 
     return 0;
 }
@@ -483,7 +483,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         return -errno;
 
     const char *desc[] = {path};
-    logFile("INFO", "CREAT", desc, 1;
+    logFile("INFO", "CREAT", desc, 1);
 
     close(res);
 
@@ -514,7 +514,7 @@ static int xmp_fsync(const char *path, int isdatasync,
     (void)isdatasync;
     (void)fi;
 
-    onst char *desc[] = {path};
+    const char *desc[] = {path};
     logFile("INFO", "FSYNC", desc, 1);
 
     return 0;
