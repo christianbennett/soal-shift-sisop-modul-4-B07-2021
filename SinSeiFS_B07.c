@@ -361,7 +361,7 @@ static int xmp_chmod(const char *path, mode_t mode)
     if (res == -1)
         return -errno;
 
-    const char *desc[] = {path, modeBuff};
+    const char *desc[] = {path, mode};
     logFile("INFO", "CHMOD", desc, 2);
 
     return 0;
