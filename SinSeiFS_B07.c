@@ -1,14 +1,4 @@
 #define FUSE_USE_VERSION 28
-#define HAVE_SETXATTR
-
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
-#ifdef linux
-/* For pread()/pwrite() */
-#define _XOPEN_SOURCE 500
-#endif
 
 #include <fuse.h>
 #include <stdio.h>
@@ -18,21 +8,34 @@
 #include <dirent.h>
 #include <errno.h>
 #include <sys/time.h>
+#include <assert.h>
 #include <stdlib.h>
 #include <math.h>
 #include <ctype.h>
 
-#ifdef HAVE_SETXATTR
-#include <sys/xattr.h>
-#endif
-
 static const char *dirpath = "/home/bennett/Downloads";
+static const char *logpath = "/home/bennett/SinSeiFS.log"
 
-int isDirectory(char *path)
+    void
+    logFile(char *level, char *command, const char *desc[], int descLen)
 {
-    struct stat sb;
-    stat(path, &sb);
-    return S_ISDIR(sb.st_mode);
+    FILE *f = fopen(logpath, "a");
+    time_t t;
+    struct tm *tmp;
+    char timeString[100];
+
+    time(&t);
+    tmp = localtime(&t);
+    strftime(timeString, sizeof(timeString), "%d%m%y-%H:%M:%S", tmp);
+
+    fprintf(f, "%s::%s::%s", level, timeString, command);
+    for (int i = 0; i < descLen; i++)
+    {
+        fprintf(f, "::%s", desc[i]);
+    }
+    fprintf(f, "\n");
+
+    fclose(f);
 }
 
 static int xmp_getattr(const char *path, struct stat *stbuf)
@@ -46,6 +49,9 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "GETATTR", desc, 1);
 
     return 0;
 }
@@ -91,6 +97,9 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 
     closedir(dp);
 
+    const char *desc[] = {path};
+    logFile("INFO", "READDIR", desc, 1);
+
     return 0;
 }
 
@@ -123,6 +132,9 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 
     close(fd);
 
+    const char *desc[] = {path};
+    logFile("INFO", "READ", desc, 1);
+
     return res;
 }
 
@@ -134,6 +146,9 @@ static int xmp_access(const char *path, int mask)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path};
+    logFile("INFO", "ACCESS", desc, 1);
+
     return 0;
 }
 
@@ -144,6 +159,9 @@ static int xmp_readlink(const char *path, char *buf, size_t size)
     res = readlink(path, buf, size - 1);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "READLINK", desc, 1);
 
     buf[res] = '\0';
     return 0;
@@ -168,6 +186,9 @@ static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path};
+    logFile("INFO", "MKNOD", desc, 1);
+
     return 0;
 }
 
@@ -178,6 +199,8 @@ static int xmp_mkdir(const char *path, mode_t mode)
     res = mkdir(path, mode);
     if (res == -1)
         return -errno;
+    const char *desc[] = {path};
+    logFile("INFO", "MKDIR", desc, 1);
 
     return 0;
 }
@@ -189,6 +212,8 @@ static int xmp_unlink(const char *path)
     res = unlink(path);
     if (res == -1)
         return -errno;
+    const char *desc[] = {path};
+    logFile("WARNING", "UNLINK", desc, 1);
 
     return 0;
 }
@@ -201,6 +226,9 @@ static int xmp_rmdir(const char *path)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path};
+    logFile("WARNING", "RMDIR", desc, 1);
+
     return 0;
 }
 
@@ -211,6 +239,9 @@ static int xmp_symlink(const char *from, const char *to)
     res = symlink(from, to);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {from, to};
+    logFile("INFO", "SYMLINK", desc, 2);
 
     return 0;
 }
@@ -223,6 +254,9 @@ static int xmp_rename(const char *from, const char *to)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {from, to};
+    logFile("INFO", "RENAME", desc, 2);
+
     return 0;
 }
 
@@ -233,6 +267,9 @@ static int xmp_link(const char *from, const char *to)
     res = link(from, to);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {from, to};
+    logFile("INFO", "LINK", desc, 2);
 
     return 0;
 }
@@ -245,16 +282,27 @@ static int xmp_chmod(const char *path, mode_t mode)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path, modeBuff};
+    logFile("INFO", "CHMOD", desc, 2;
+
     return 0;
 }
 
 static int xmp_chown(const char *path, uid_t uid, gid_t gid)
 {
+    char uidString[100];
+    char gidString[100];
+    sprintf(uidString, "%d", uid);
+    sprintf(gidString, "%d", gid);
+
     int res;
 
     res = lchown(path, uid, gid);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path, uidString, gidString};
+    logFile("INFO", "CHOWN", desc, 3);
 
     return 0;
 }
@@ -266,6 +314,9 @@ static int xmp_truncate(const char *path, off_t size)
     res = truncate(path, size);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "TRUNCATE", desc, 1);
 
     return 0;
 }
@@ -284,6 +335,9 @@ static int xmp_utimens(const char *path, const struct timespec ts[2])
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path};
+    logFile("INFO", "UTIMENSAT", desc, 1);
+
     return 0;
 }
 
@@ -294,6 +348,9 @@ static int xmp_open(const char *path, struct fuse_file_info *fi)
     res = open(path, fi->flags);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "OPEN", desc, 1);
 
     close(res);
     return 0;
@@ -315,6 +372,10 @@ static int xmp_write(const char *path, const char *buf, size_t size,
         res = -errno;
 
     close(fd);
+
+    const char *desc[] = {path};
+    logFile("INFO", "WRITE", desc, 1);
+
     return res;
 }
 
@@ -325,6 +386,9 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
     res = statvfs(path, stbuf);
     if (res == -1)
         return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "STATFS", desc, 1);
 
     return 0;
 }
@@ -339,6 +403,9 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
     if (res == -1)
         return -errno;
 
+    const char *desc[] = {path};
+    logFile("INFO", "CREAT", desc, 1;
+
     close(res);
 
     return 0;
@@ -351,6 +418,10 @@ static int xmp_release(const char *path, struct fuse_file_info *fi)
 
     (void)path;
     (void)fi;
+
+    const char *desc[] = {path};
+    logFile("INFO", "RELEASE", desc, 1);
+
     return 0;
 }
 
@@ -363,44 +434,12 @@ static int xmp_fsync(const char *path, int isdatasync,
     (void)path;
     (void)isdatasync;
     (void)fi;
+
+    onst char *desc[] = {path};
+    logFile("INFO", "FSYNC", desc, 1);
+
     return 0;
 }
-
-#ifdef HAVE_SETXATTR
-static int xmp_setxattr(const char *path, const char *name, const char *value,
-                        size_t size, int flags)
-{
-    int res = lsetxattr(path, name, value, size, flags);
-    if (res == -1)
-        return -errno;
-    return 0;
-}
-
-static int xmp_getxattr(const char *path, const char *name, char *value,
-                        size_t size)
-{
-    int res = lgetxattr(path, name, value, size);
-    if (res == -1)
-        return -errno;
-    return res;
-}
-
-static int xmp_listxattr(const char *path, char *list, size_t size)
-{
-    int res = llistxattr(path, list, size);
-    if (res == -1)
-        return -errno;
-    return res;
-}
-
-static int xmp_removexattr(const char *path, const char *name)
-{
-    int res = lremovexattr(path, name);
-    if (res == -1)
-        return -errno;
-    return 0;
-}
-#endif /* HAVE_SETXATTR */
 
 static struct fuse_operations xmp_oper = {
     .getattr = xmp_getattr,
@@ -425,12 +464,6 @@ static struct fuse_operations xmp_oper = {
     .create = xmp_create,
     .release = xmp_release,
     .fsync = xmp_fsync,
-#ifdef HAVE_SETXATTR
-    .setxattr = xmp_setxattr,
-    .getxattr = xmp_getxattr,
-    .listxattr = xmp_listxattr,
-    .removexattr = xmp_removexattr,
-#endif
 };
 
 int main(int argc, char *argv[])
