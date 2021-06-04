@@ -167,7 +167,6 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
 
         st.st_ino = de->d_ino;
         st.st_mode = de->d_type << 12;
-
         res = (filler(buf, de->d_name, &st, 0));
 
         if (res != 0)
