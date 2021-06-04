@@ -355,13 +355,16 @@ static int xmp_link(const char *from, const char *to)
 
 static int xmp_chmod(const char *path, mode_t mode)
 {
+    char modeString[100];
+    sprintf(modeString, "%s", mode);
+
     int res;
 
     res = chmod(path, mode);
     if (res == -1)
         return -errno;
 
-    const char *desc[] = {path, mode};
+    const char *desc[] = {path, modeString};
     logFile("INFO", "CHMOD", desc, 2);
 
     return 0;
