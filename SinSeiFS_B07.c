@@ -26,7 +26,7 @@
 #include <sys/xattr.h>
 #endif
 
-static const char *dirpath = "/home/bennett/Documents";
+static const char *dirpath = "/home/bennett/Downloads";
 
 int isDirectory(char *path)
 {
