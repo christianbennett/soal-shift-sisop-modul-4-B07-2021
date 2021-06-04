@@ -356,7 +356,7 @@ static int xmp_link(const char *from, const char *to)
 static int xmp_chmod(const char *path, mode_t mode)
 {
     char modeString[100];
-    sprintf(modeString, "%s", mode);
+    sprintf(modeString, "%d", mode);
 
     int res;
 
