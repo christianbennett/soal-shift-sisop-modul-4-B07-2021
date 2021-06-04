@@ -14,10 +14,9 @@
 #include <ctype.h>
 
 static const char *dirpath = "/home/bennett/Downloads";
-static const char *logpath = "/home/bennett/SinSeiFS.log"
+static const char *logpath = "/home/bennett/SinSeiFS.log";
 
-    void
-    logFile(char *level, char *command, const char *desc[], int descLen)
+void logFile(char *level, char *command, const char *desc[], int descLen)
 {
     FILE *f = fopen(logpath, "a");
     time_t t;
