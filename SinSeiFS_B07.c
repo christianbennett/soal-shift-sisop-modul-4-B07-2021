@@ -16,6 +16,86 @@
 static const char *dirpath = "/home/bennett/Downloads";
 static const char *logpath = "/home/bennett/SinSeiFS.log";
 
+int len(char str[])
+{
+    int count = 0;
+    for (int i = 0; i < strlen(str); i++)
+    {
+        count++;
+        if (str[i] == '.')
+        {
+            count--;
+            break;
+        }
+    }
+    return count;
+}
+
+void compareString(char str1[], char str2[], char arr[])
+{
+    for (int i = 0; i < len(str1); i++)
+    {
+        if (str1[i] != str2[i])
+        {
+            arr[i] = '1';
+        }
+        else
+        {
+            arr[i] = '0';
+        }
+    }
+}
+
+int convert(long long int n)
+{
+    int dec = 0, i = 0, rem;
+    while (n != 0)
+    {
+        rem = n % 10;
+        n /= 10;
+        dec += rem * pow(2, i);
+        ++i;
+    }
+    return dec;
+}
+
+void appendString(char str1[])
+{
+    char str2[strlen(str1)];
+
+    for (int i = 0; i < strlen(str1); i++)
+    {
+        str2[i] = tolower(str1[i]);
+    }
+
+    int size = len(str1);
+
+    char arr[size];
+
+    compareString(str1, str2, arr);
+
+    long long int binary = atoll(arr);
+
+    // printf("Binary number = %lld\n", binary);
+
+    int decimal = convert(binary);
+
+    // printf("Decimal number = %d\n", decimal);
+
+    char decimalString[size];
+
+    sprintf(decimalString, "%d", decimal);
+
+    // printf("Decimal number (String) = %s\n", decimalString);
+    // printf("str1 = %s\n", str1);
+    // printf("decimalString = %s\n", decimalString);
+
+    strcat(str1, ".");
+    strcat(str1, decimalString);
+
+    // printf("New String = %s", str1);
+}
+
 void logFile(char *level, char *command, const char *desc[], int descLen)
 {
     FILE *f = fopen(logpath, "a");
