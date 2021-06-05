@@ -107,7 +107,7 @@ void logFile(char *level, char *command, const char *desc[], int descLen)
     tmp = localtime(&t);
     strftime(timeString, sizeof(timeString), "%d%m%y-%H:%M:%S", tmp);
 
-    fprintf(f, "%s::%s::%s", level, timeString, command);
+    fprintf(f, "%s::%s:%s", level, timeString, command);
     for (int i = 0; i < descLen; i++)
     {
         fprintf(f, "::%s", desc[i]);
