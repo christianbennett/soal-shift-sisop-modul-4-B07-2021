@@ -485,7 +485,7 @@ static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
         return -errno;
 
     const char *desc[] = {path};
-    logFile("INFO", "CREAT", desc, 1);
+    logFile("INFO", "CREATE", desc, 1);
 
     close(res);
 
