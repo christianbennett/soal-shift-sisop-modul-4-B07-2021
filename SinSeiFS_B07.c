@@ -16,6 +16,19 @@
 static const char *dirpath = "/home/bennett/Downloads";
 static const char *logpath = "/home/bennett/SinSeiFS.log";
 
+int checkVersion(char path[]) //check versi no1 atau 2
+{
+    
+}
+
+void *getCurrentDir(char *path){ //untuk akses directory sekarang
+
+}
+
+void enc(char *encrypt){ //encode
+
+}
+
 int len(char str[])
 {
     int count = 0;
