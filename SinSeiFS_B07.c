@@ -72,7 +72,7 @@ void encryptAtbash(char *path)
 
     int endid = extensionId(path);
     if (endid == strlen(path))
-        endid = ext_id(path);
+        endid = dotId(path);
     int startid = slashId(path, 0);
 
     for (int i = startid; i < endid; i++)
@@ -103,7 +103,7 @@ void decryptAtbash(char *path)
 
     int endid = extensionId(path);
     if (endid == strlen(path))
-        endid = ext_id(path);
+        endid = dotId(path);
     int startid = slashId(path, endid);
 
     for (int i = startid; i < endid; i++)
