@@ -870,6 +870,8 @@ static int xmp_symlink(const char *from, const char *to)
     return 0;
 }
 
+/* functions RENAME dilakukan pengecekan apakah direktori direname dengan menambahkan
+ RX_ atau menghilangkan RX_ dengan fungsi strstr().*/
 static int xmp_rename(const char *from, const char *to)
 {
     int res;
