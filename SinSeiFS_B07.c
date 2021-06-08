@@ -49,7 +49,7 @@ int dotId(char *path)
 //mendapatkan lokasi extension
 int extensionId(char *path)
 {
-    bool flag = 0;
+    int flag = 0;
     for (int i = strlen(path) - 1; i >= 0; i--)
     {
         if (path[i] == '.')
@@ -70,10 +70,10 @@ void encryptAtbash(char *path)
 
     printf("Atbash Encrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
+    int endid = extensionId(path);
     if (endid == strlen(path))
         endid = ext_id(path);
-    int startid = slash_id(path, 0);
+    int startid = slashId(path, 0);
 
     for (int i = startid; i < endid; i++)
     {
@@ -101,10 +101,10 @@ void decryptAtbash(char *path)
 
     printf("Atbash Decrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
+    int endid = extensionId(path);
     if (endid == strlen(path))
         endid = ext_id(path);
-    int startid = slash_id(path, endid);
+    int startid = slashId(path, endid);
 
     for (int i = startid; i < endid; i++)
     {
@@ -132,8 +132,8 @@ void encryptRot13(char *path)
 
     printf("ROT14 Encrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
-    int startid = slash_id(path, 0);
+    int endid = extensionId(path);
+    int startid = slashId(path, 0);
 
     for (int i = startid; i < endid; i++)
     {
@@ -161,8 +161,8 @@ void decryptRot13(char *path)
 
     printf("ROT13 Decrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
-    int startid = slash_id(path, endid);
+    int endid = extensionId(path);
+    int startid = slashId(path, endid);
 
     for (int i = startid; i < endid; i++)
     {
@@ -190,8 +190,8 @@ void encryptVigenere(char *path)
 
     printf("Vigenere Encrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
-    int startid = slash_id(path, 0);
+    int endid = extensionId(path);
+    int startid = slashId(path, 0);
 
     for (int i = startid; i < endid; i++)
     {
@@ -225,8 +225,8 @@ void decryptVigenere(char *path)
 
     printf("Vigenere Decrypt Path: %s\n", path);
 
-    int endid = split_ext_id(path);
-    int startid = slash_id(path, endid);
+    int endid = extensionId(path);
+    int startid = slashId(path, endid);
 
     for (int i = startid; i < endid; i++)
     {
@@ -649,9 +649,9 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
         st.st_ino = de->d_ino;
         st.st_mode = de->d_type << 12;
 
-        if (a != NULL)
+        if (strstr(path, atoz) != NULL)
             encryptAtbash(de->d_name);
-        if (b != NULL)
+        if (strstr(path, rx) != NULL)
         {
             encryptAtbash(de->d_name);
             encryptRot13(de->d_name);
@@ -905,12 +905,12 @@ static int xmp_rename(const char *from, const char *to)
 
     if (c != NULL)
     {
-        enkripsi2(topath);
+        encrypt2(topath);
     }
 
     if (b != NULL && c == NULL)
     {
-        dekripsi2(topath);
+        decrypt2(topath);
     }
 
     if (strstr(to, aisa) != NULL)
