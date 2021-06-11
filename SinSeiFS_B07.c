@@ -449,17 +449,17 @@ void getDecimal(char *fname, char *bin, char *normalcase)
 
     for (i = startId; i < endId; i++)
     {
-        if (bin[i - startid] == '1')
-            normalcase[i - startid] = fname[i] - 32;
+        if (bin[i - startId] == '1')
+            normalcase[i - startId] = fname[i] - 32;
         else
-            normalcase[i - startid] = fname[i];
+            normalcase[i - startId] = fname[i];
     }
 
     for (; i < strlen(fname); i++)
     {
-        normalcase[i - startid] = fname[i];
+        normalcase[i - startId] = fname[i];
     }
-    normalcase[i - startid] = '\0';
+    normalcase[i - startId] = '\0';
 }
 
 void encryptBinary(char *fpath)
