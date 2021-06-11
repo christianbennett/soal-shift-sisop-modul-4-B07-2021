@@ -68,14 +68,14 @@ void encryptAtbash(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("Atbash Encrypt Path: %s\n", path);
+    printf("encrypt path Atbash: %s\n", path);
 
-    int endid = extensionId(path);
-    if (endid == strlen(path))
-        endid = dotId(path);
-    int startid = slashId(path, 0);
+    int endId = extensionId(path);
+    if (endId == strlen(path))
+        endId = dotId(path);
+    int startId = slashId(path, 0);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
@@ -99,14 +99,14 @@ void decryptAtbash(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("Atbash Decrypt Path: %s\n", path);
+    printf("decrypt path Atbash: %s\n", path);
 
-    int endid = extensionId(path);
-    if (endid == strlen(path))
-        endid = dotId(path);
-    int startid = slashId(path, endid);
+    int endId = extensionId(path);
+    if (endId == strlen(path))
+        endId = dotId(path);
+    int startId = slashId(path, endId);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
@@ -130,12 +130,12 @@ void encryptRot13(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("ROT14 Encrypt Path: %s\n", path);
+    printf("encrypt path ROT13: %s\n", path);
 
-    int endid = extensionId(path);
-    int startid = slashId(path, 0);
+    int endId = extensionId(path);
+    int startId = slashId(path, 0);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
@@ -159,12 +159,12 @@ void decryptRot13(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("ROT13 Decrypt Path: %s\n", path);
+    printf("decrypt path ROT13: %s\n", path);
 
-    int endid = extensionId(path);
-    int startid = slashId(path, endid);
+    int endId = extensionId(path);
+    int startId = slashId(path, endId);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
@@ -188,17 +188,17 @@ void encryptVigenere(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("Vigenere Encrypt Path: %s\n", path);
+    printf("encrypt path Vigenere: %s\n", path);
 
-    int endid = extensionId(path);
-    int startid = slashId(path, 0);
+    int endId = extensionId(path);
+    int startId = slashId(path, 0);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
             char tmp1 = path[i];
-            char tmp2 = key[(i - startid) % strlen(key)];
+            char tmp2 = key[(i - startId) % strlen(key)];
             if (isupper(path[i]))
             {
                 tmp1 -= 'A';
@@ -223,17 +223,17 @@ void decryptVigenere(char *path)
     if (!strcmp(path, ".") || !strcmp(path, ".."))
         return;
 
-    printf("Vigenere Decrypt Path: %s\n", path);
+    printf("decrypt path Vigenere: %s\n", path);
 
-    int endid = extensionId(path);
-    int startid = slashId(path, endid);
+    int endId = extensionId(path);
+    int startId = slashId(path, endId);
 
-    for (int i = startid; i < endid; i++)
+    for (int i = startId; i < endId; i++)
     {
         if (path[i] != '/' && isalpha(path[i]))
         {
             char tmp1 = path[i];
-            char tmp2 = key[(i - startid) % strlen(key)];
+            char tmp2 = key[(i - startId) % strlen(key)];
             if (isupper(path[i]))
             {
                 tmp1 -= 'A';
@@ -262,7 +262,7 @@ void encrypt2(char *fpath)
     dp = opendir(".");
     if (dp == NULL)
         return;
-    struct stat st;
+    struct stat lol;
     char dirPath[1000];
     char filePath[1000];
 
@@ -270,15 +270,15 @@ void encrypt2(char *fpath)
     {
         printf("dirname %s\n", dir->d_name);
         printf("%s/%s\n", fpath, dir->d_name);
-        if (stat(dir->d_name, &st) < 0)
+        if (stat(dir->d_name, &lol) < 0)
             ;
-        else if (S_ISDIR(st.st_mode))
+        else if (S_ISDIR(lol.st_mode))
         {
             if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
                 continue;
             sprintf(dirPath, "%s/%s", fpath, dir->d_name);
             encrypt2(dirPath);
-            printf("dirPath %s\n", dirPath);
+            printf("dirpath %s\n", dirPath);
         }
         else
         {
@@ -313,7 +313,7 @@ void decrypt2(char *dir)
     chdir(dir);
     DIR *dp;
     struct dirent *de;
-    struct stat st;
+    struct stat lol;
     dp = opendir(".");
     if (dp == NULL)
         return;
@@ -323,9 +323,9 @@ void decrypt2(char *dir)
 
     while ((de = readdir(dp)) != NULL)
     {
-        if (stat(de->d_name, &st) < 0)
+        if (stat(de->d_name, &lol) < 0)
             ;
-        else if (S_ISDIR(st.st_mode))
+        else if (S_ISDIR(lol.st_mode))
         {
             if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
                 continue;
@@ -363,117 +363,124 @@ void decrypt2(char *dir)
     closedir(dp);
 }
 
-//untuk mendapatkan strlen tanpa extension
-int len(char str[])
+void getBinary(char *fname, char *bin, char *lowercase)
 {
-    int count = 0;
-    for (int i = 0; i < strlen(str); i++)
-    {
-        count++;
-        if (str[i] == '.')
-        {
-            count--;
-            break;
-        }
-    }
-    return count;
-}
+    int endId = (fname);
+    int startId = slashId(fname, 0);
+    int i;
 
-//compare 2 string jika beda
-void compareString(char str1[], char str2[], char arr[])
-{
-    for (int i = 0; i < len(str1); i++)
+    for (i = startId; i < endId; i++)
     {
-        if (str1[i] != str2[i])
+        if (isupper(fname[i]))
         {
-            arr[i] = '1';
+            bin[i] = '1';
+            lowercase[i] = fname[i] + 32;
         }
         else
         {
-            arr[i] = '0';
+            bin[i] = '0';
+            lowercase[i] = fname[i];
         }
     }
+    bin[endId] = '\0';
+
+    for (; i < strlen(fname); i++)
+    {
+        lowercase[i] = fname[i];
+    }
+    lowercase[i] = '\0';
 }
 
-//convert decimal to binary
-int convert(long long int n)
+int convertBinToDec(char *bin)
 {
-    int dec = 0, i = 0, rem;
-    while (n != 0)
+    int tmp = 1, res = 0;
+    for (int i = strlen(bin) - 1; i >= 0; i--)
     {
-        rem = n % 10;
-        n /= 10;
-        dec += rem * pow(2, i);
-        ++i;
+        if (bin[i] == '1')
+            res += tmp;
+        tmp *= 2;
+    }
+    return res;
+}
+
+int convertDec(char *ext)
+{
+    int dec = 0, pengali = 1;
+    for (int i = strlen(ext) - 1; i >= 0; i--)
+    {
+        dec += (ext[i] - '0') * pengali;
+        pengali *= 10;
     }
     return dec;
 }
 
-//concat pada string
-void appendString(char str1[])
+void convertDecToBin(int dec, char *bin, int len)
 {
-    char str2[strlen(str1)];
-
-    for (int i = 0; i < strlen(str1); i++)
+    int idx = 0;
+    while (dec)
     {
-        str2[i] = tolower(str1[i]);
+        if (dec & 1)
+            bin[idx] = '1';
+        else
+            bin[idx] = '0';
+        idx++;
+        dec /= 2;
+    }
+    while (idx < len)
+    {
+        bin[idx] = '0';
+        idx++;
+    }
+    bin[idx] = '\0';
+
+    for (int i = 0; i < idx / 2; i++)
+    {
+        char tmp = bin[i];
+        bin[i] = bin[idx - 1 - i];
+        bin[idx - 1 - i] = tmp;
+    }
+}
+
+void getDecimal(char *fname, char *bin, char *normalcase)
+{
+    int endId = (fname);
+    int startId = slashId(fname, 0);
+    int i;
+
+    for (i = startId; i < endId; i++)
+    {
+        if (bin[i - startid] == '1')
+            normalcase[i - startid] = fname[i] - 32;
+        else
+            normalcase[i - startid] = fname[i];
     }
 
-    int size = len(str1);
-
-    char arr[size];
-
-    compareString(str1, str2, arr);
-
-    long long int binary = atoll(arr);
-
-    // printf("Binary number = %lld\n", binary);
-
-    int decimal = convert(binary);
-
-    // printf("Decimal number = %d\n", decimal);
-
-    char decimalString[size];
-
-    sprintf(decimalString, "%d", decimal);
-
-    // printf("Decimal number (String) = %s\n", decimalString);
-    // printf("str1 = %s\n", str1);
-    // printf("decimalString = %s\n", decimalString);
-
-    for (int i = 0; str1[i]; i++)
+    for (; i < strlen(fname); i++)
     {
-        str1[i] = tolower(str1[i]);
+        normalcase[i - startid] = fname[i];
     }
-
-    strcat(str1, ".");
-    strcat(str1, decimalString);
-
-    // printf("New String = %s", str1);
+    normalcase[i - startid] = '\0';
 }
 
 void encryptBinary(char *fpath)
 {
     chdir(fpath);
-
     DIR *dp;
     struct dirent *dir;
-    struct stat st;
-
+    struct stat lol;
     dp = opendir(".");
     if (dp == NULL)
         return;
 
     char dirPath[1000];
     char filePath[1000];
-    char binaryFilePath[1000];
-    char temp[1000];
+    char filePathBinary[1000];
 
     while ((dir = readdir(dp)) != NULL)
     {
-        if (stat(dir->d_name, &st) < 0)
+        if (stat(dir->d_name, &lol) < 0)
             ;
-        else if (S_ISDIR(st.st_mode))
+        else if (S_ISDIR(lol.st_mode))
         {
             if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
                 continue;
@@ -483,10 +490,11 @@ void encryptBinary(char *fpath)
         else
         {
             sprintf(filePath, "%s/%s", fpath, dir->d_name);
-            sprintf(temp, "%s", dir->d_name);
-            appendString(temp);
-            sprintf(binaryFilePath, "%s/%s", fpath, temp);
-            rename(filePath, binaryFilePath);
+            char bin[1000], lowercase[1000];
+            getBinary(dir->d_name, bin, lowercase);
+            int dec = convertBinToDec(bin);
+            sprintf(filePathBinary, "%s/%s.%d", fpath, lowercase, dec);
+            rename(filePath, filePathBinary);
         }
     }
     closedir(dp);
@@ -494,53 +502,48 @@ void encryptBinary(char *fpath)
 
 void decryptBinary(char *fpath)
 {
-    // chdir(fpath);
+    chdir(fpath);
+    DIR *dp;
+    struct dirent *dir;
+    struct stat lol;
+    dp = opendir(".");
+    if (dp == NULL)
+        return;
 
-    // DIR *dp;
-    // struct dirent *dir;
-    // struct stat st;
+    char dirPath[1000];
+    char filePath[1000];
+    char filePathDecimal[1000];
 
-    // dp = opendir(".");
-    // if (dp == NULL)
-    //     return;
+    while ((dir = readdir(dp)) != NULL)
+    {
+        if (stat(dir->d_name, &lol) < 0)
+            ;
+        else if (S_ISDIR(lol.st_mode))
+        {
+            if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+                continue;
+            sprintf(dirPath, "%s/%s", fpath, dir->d_name);
+            decryptBinary(dirPath);
+        }
+        else
+        {
+            sprintf(filePath, "%s/%s", fpath, dir->d_name);
+            char fname[1000], bin[1000], normalcase[1000], clearPath[1000];
 
-    // char dirPath[1000];
-    // char filePath[1000];
-    // char decimalFilePath[1000];
-    // char fname[1000];
-    // char bin[1000];
-    // char normalcase[1000];
-    // char clearPath[1000];
+            strcpy(fname, dir->d_name);
+            char *ext = strrchr(fname, '.');
+            int dec = convertDec(ext + 1);
+            for (int i = 0; i < strlen(fname) - strlen(ext); i++)
+                clearPath[i] = fname[i];
 
-    // while ((dir = readdir(dp)) != NULL)
-    // {
-    //     if (stat(dir->d_name, &st) < 0)
-    //         ;
-    //     else if (S_ISDIR(st.st_mode))
-    //     {
-    //         if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
-    //             continue;
-    //         sprintf(dirPath, "%s/%s", fpath, dir->d_name);
-    //         decryptBinary(dirPath);
-    //     }
-    //     else
-    //     {
-    //         sprintf(filePath, "%s/%s", fpath, dir->d_name);
-
-    //         strcpy(fname, dir->d_name);
-    //         char *ext = strrchr(fname, '.');
-    //         int dec = convertDec(ext + 1);
-    //         for (int i = 0; i < strlen(fname) - strlen(ext); i++)
-    //             clearPath[i] = fname[i];
-
-    //         char *ext2 = strrchr(clearPath, '.');
-    //         dec_to_bin(dec, bin, strlen(clearPath) - strlen(ext2));
-    //         getDecimal(clearPath, bin, normalcase);
-    //         sprintf(decimalFilePath, "%s/%s", fpath, normalcase);
-    //         rename(filePath, decimalFilePath);
-    //     }
-    // }
-    // closedir(dp);
+            char *ext2 = strrchr(clearPath, '.');
+            convertDecToBin(dec, bin, strlen(clearPath) - strlen(ext2));
+            getDecimal(clearPath, bin, normalcase);
+            sprintf(filePathDecimal, "%s/%s", fpath, normalcase);
+            rename(filePath, filePathDecimal);
+        }
+    }
+    closedir(dp);
 }
 
 //fungsi log no.4
@@ -570,17 +573,15 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
     int res;
     char fpath[1000];
 
-    // sprintf(fpath, "%s%s", dirPath, path);
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
 
-    if (strstr(path, atoz) != NULL)
+    char *b = strstr(path, rx);
+    if (b != NULL)
     {
-        decryptAtbash(strstr(path, atoz));
-    }
-
-    if (strstr(path, rx) != NULL)
-    {
-        decryptRot13(strstr(path, rx));
-        decryptAtbash(strstr(path, rx));
+        decryptRot13(b);
+        decryptAtbash(b);
     }
 
     if (strcmp(path, "/") == 0)
@@ -594,7 +595,6 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
     }
 
     res = lstat(fpath, stbuf);
-
     if (res == -1)
         return -errno;
 
@@ -607,16 +607,17 @@ static int xmp_getattr(const char *path, struct stat *stbuf)
 static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_t offset, struct fuse_file_info *fi)
 {
     char fpath[1000];
+    //int rot13 = 0;
 
-    if (strstr(path, atoz) != NULL)
-    {
-        decryptAtbash(strstr(path, atoz));
-    }
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
 
-    if (strstr(path, rx) != NULL)
+    char *b = strstr(path, rx);
+    if (b != NULL)
     {
-        decryptRot13(strstr(path, rx));
-        decryptAtbash(strstr(path, rx));
+        decryptRot13(b);
+        decryptAtbash(b);
     }
 
     if (strcmp(path, "/") == 0)
@@ -625,17 +626,18 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
         sprintf(fpath, "%s", path);
     }
     else
+    {
         sprintf(fpath, "%s%s", dirPath, path);
+    }
 
     int res = 0;
-
     DIR *dp;
     struct dirent *de;
+
     (void)offset;
     (void)fi;
 
     dp = opendir(fpath);
-
     if (dp == NULL)
         return -errno;
 
@@ -649,13 +651,14 @@ static int xmp_readdir(const char *path, void *buf, fuse_fill_dir_t filler, off_
         st.st_ino = de->d_ino;
         st.st_mode = de->d_type << 12;
 
-        if (strstr(path, atoz) != NULL)
+        if (a != NULL)
             encryptAtbash(de->d_name);
-        if (strstr(path, rx) != NULL)
+        if (b != NULL)
         {
             encryptAtbash(de->d_name);
             encryptRot13(de->d_name);
         }
+
         res = (filler(buf, de->d_name, &st, 0));
         if (res != 0)
             break;
@@ -673,25 +676,26 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
 {
     char fpath[1000];
 
-    if (strstr(path, atoz) != NULL)
-    {
-        decryptAtbash(strstr(path, atoz));
-    }
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
 
-    if (strstr(path, rx) != NULL)
+    char *b = strstr(path, rx);
+    if (b != NULL)
     {
-        decryptRot13(strstr(path, rx));
-        decryptAtbash(strstr(path, rx));
+        decryptRot13(b);
+        decryptAtbash(b);
     }
 
     if (strcmp(path, "/") == 0)
     {
         path = dirPath;
-
         sprintf(fpath, "%s", path);
     }
     else
+    {
         sprintf(fpath, "%s%s", dirPath, path);
+    }
 
     int res = 0;
     int fd = 0;
@@ -699,12 +703,10 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     (void)fi;
 
     fd = open(fpath, O_RDONLY);
-
     if (fd == -1)
         return -errno;
 
     res = pread(fd, buf, size, offset);
-
     if (res == -1)
         res = -errno;
 
@@ -714,6 +716,255 @@ static int xmp_read(const char *path, char *buf, size_t size, off_t offset, stru
     logFile("INFO", "READ", desc, 1);
 
     return res;
+}
+
+static int xmp_mkdir(const char *path, mode_t mode)
+{
+    int res;
+    char fpath[1000];
+
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
+
+    char *b = strstr(path, rx);
+    if (b != NULL)
+    {
+        decryptRot13(b);
+        decryptAtbash(b);
+    }
+
+    if (strcmp(path, "/") == 0)
+    {
+        path = dirPath;
+        sprintf(fpath, "%s", path);
+    }
+    else
+    {
+        sprintf(fpath, "%s%s", dirPath, path);
+    }
+
+    res = mkdir(fpath, mode);
+
+    if (res == -1)
+        return -errno;
+
+    const char *desc[] = {fpath};
+    logFile("INFO", "MKDIR", desc, 1);
+
+    return 0;
+}
+
+static int xmp_rmdir(const char *path)
+{
+    int res;
+    char fpath[1000];
+
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
+
+    char *b = strstr(path, rx);
+    if (b != NULL)
+    {
+        decryptRot13(b);
+        decryptAtbash(b);
+    }
+
+    if (strcmp(path, "/") == 0)
+    {
+        path = dirPath;
+        sprintf(fpath, "%s", path);
+    }
+    else
+    {
+        sprintf(fpath, "%s%s", dirPath, path);
+    }
+
+    res = rmdir(fpath);
+
+    if (res == -1)
+        return -errno;
+
+    const char *desc[] = {fpath};
+    logFile("WARNING", "RMDIR", desc, 1);
+
+    return 0;
+}
+
+static int xmp_rename(const char *from, const char *to)
+{
+    int res;
+    char frompath[1000], topath[1000];
+
+    char *a = strstr(to, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
+
+    char *b = strstr(from, rx);
+    if (b != NULL)
+    {
+        decryptRot13(b);
+        decryptAtbash(b);
+    }
+
+    char *c = strstr(to, rx);
+    if (c != NULL)
+    {
+        decryptRot13(c);
+        decryptAtbash(c);
+    }
+
+    sprintf(frompath, "%s%s", dirPath, from);
+    sprintf(topath, "%s%s", dirPath, to);
+
+    res = rename(frompath, topath);
+    if (res == -1)
+        return -errno;
+
+    if (c != NULL)
+    {
+        encrypt2(topath);
+    }
+
+    if (b != NULL && c == NULL)
+    {
+        decrypt2(topath);
+    }
+
+    if (strstr(to, aisa) != NULL)
+    {
+        encryptBinary(topath);
+    }
+
+    if (strstr(from, aisa) != NULL && strstr(to, aisa) == NULL)
+    {
+        decryptBinary(topath);
+    }
+
+    const char *desc[] = {frompath, topath};
+    logFile("INFO", "RENAME", desc, 2);
+
+    return 0;
+}
+
+static int xmp_truncate(const char *path, off_t size)
+{
+    int res;
+
+    res = truncate(path, size);
+    if (res == -1)
+        return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "TRUNCATE", desc, 1);
+
+    return 0;
+}
+
+static int xmp_write(const char *path, const char *buf, size_t size, off_t offset, struct fuse_file_info *fi)
+{
+    int fd;
+    int res;
+    char fpath[1000];
+
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
+
+    char *b = strstr(path, rx);
+    if (b != NULL)
+    {
+        decryptRot13(b);
+        decryptAtbash(b);
+    }
+
+    if (strcmp(path, "/") == 0)
+    {
+        path = dirPath;
+        sprintf(fpath, "%s", path);
+    }
+    else
+    {
+        sprintf(fpath, "%s%s", dirPath, path);
+    }
+
+    (void)fi;
+
+    fd = open(fpath, O_WRONLY);
+    if (fd == -1)
+        return -errno;
+
+    res = pwrite(fd, buf, size, offset);
+    if (res == -1)
+        res = -errno;
+
+    close(fd);
+
+    const char *desc[] = {path};
+    logFile("INFO", "WRITE", desc, 1);
+
+    return res;
+}
+
+static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
+{
+    int res;
+    char fpath[1000];
+
+    char *a = strstr(path, atoz);
+    if (a != NULL)
+        decryptAtbash(a);
+
+    char *b = strstr(path, rx);
+    if (b != NULL)
+    {
+        decryptRot13(b);
+        decryptAtbash(b);
+    }
+
+    if (strcmp(path, "/") == 0)
+    {
+        path = dirPath;
+        sprintf(fpath, "%s", path);
+    }
+    else
+    {
+        sprintf(fpath, "%s%s", dirPath, path);
+    }
+
+    (void)fi;
+
+    res = creat(fpath, mode);
+    if (res == -1)
+        return -errno;
+
+    close(res);
+
+    const char *desc[] = {path};
+    logFile("INFO", "CREATE", desc, 1);
+
+    return 0;
+}
+
+static int xmp_utimens(const char *path, const struct timespec ts[2])
+{
+    int res;
+    struct timeval tv[2];
+
+    tv[0].tv_sec = ts[0].tv_sec;
+    tv[0].tv_usec = ts[0].tv_nsec / 1000;
+    tv[1].tv_sec = ts[1].tv_sec;
+    tv[1].tv_usec = ts[1].tv_nsec / 1000;
+
+    res = utimes(path, tv);
+    if (res == -1)
+        return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "UTIMENSAT", desc, 1);
+
+    return 0;
 }
 
 static int xmp_access(const char *path, int mask)
@@ -726,6 +977,34 @@ static int xmp_access(const char *path, int mask)
 
     const char *desc[] = {path};
     logFile("INFO", "ACCESS", desc, 1);
+
+    return 0;
+}
+
+static int xmp_open(const char *path, struct fuse_file_info *fi)
+{
+    int res;
+
+    res = open(path, fi->flags);
+    if (res == -1)
+        return -errno;
+
+    const char *desc[] = {path};
+    logFile("INFO", "OPEN", desc, 1);
+
+    close(res);
+    return 0;
+}
+
+static int xmp_unlink(const char *path)
+{
+    int res;
+
+    res = unlink(path);
+    if (res == -1)
+        return -errno;
+    const char *desc[] = {path};
+    logFile("WARNING", "UNLINK", desc, 1);
 
     return 0;
 }
@@ -770,92 +1049,6 @@ static int xmp_mknod(const char *path, mode_t mode, dev_t rdev)
     return 0;
 }
 
-static int xmp_mkdir(const char *path, mode_t mode)
-{
-    int res;
-    char fpath[1000];
-
-    if (strstr(path, atoz) != NULL)
-    {
-        decryptAtbash(strstr(path, atoz));
-    }
-
-    if (strstr(path, rx) != NULL)
-    {
-        decryptRot13(strstr(path, rx));
-        decryptAtbash(strstr(path, rx));
-    }
-
-    if (strcmp(path, "/") == 0)
-    {
-        path = dirPath;
-        sprintf(fpath, "%s", path);
-    }
-
-    else
-    {
-        sprintf(fpath, "%s%s", dirPath, path);
-    }
-
-    res = mkdir(fpath, mode);
-    if (res == -1)
-        return -errno;
-    const char *desc[] = {fpath};
-    logFile("INFO", "MKDIR", desc, 1);
-
-    return 0;
-}
-
-static int xmp_unlink(const char *path)
-{
-    int res;
-
-    res = unlink(path);
-    if (res == -1)
-        return -errno;
-    const char *desc[] = {path};
-    logFile("WARNING", "UNLINK", desc, 1);
-
-    return 0;
-}
-
-static int xmp_rmdir(const char *path)
-{
-    int res;
-    char fpath[1000];
-
-    if (strstr(path, atoz) != NULL)
-    {
-        decryptAtbash(strstr(path, atoz));
-    }
-
-    if (strstr(path, rx) != NULL)
-    {
-        decryptRot13(strstr(path, rx));
-        decryptAtbash(strstr(path, rx));
-    }
-
-    if (strcmp(path, "/") == 0)
-    {
-        path = dirPath;
-        sprintf(fpath, "%s", path);
-    }
-
-    else
-    {
-        sprintf(fpath, "%s%s", dirPath, path);
-    }
-
-    res = rmdir(fpath);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {fpath};
-    logFile("WARNING", "RMDIR", desc, 1);
-
-    return 0;
-}
-
 static int xmp_symlink(const char *from, const char *to)
 {
     int res;
@@ -868,62 +1061,6 @@ static int xmp_symlink(const char *from, const char *to)
     logFile("INFO", "SYMLINK", desc, 2);
 
     return 0;
-}
-
-/* functions RENAME dilakukan pengecekan apakah direktori direname dengan menambahkan
- RX_ atau menghilangkan RX_ dengan fungsi strstr().*/
-static int xmp_rename(const char *from, const char *to)
-{
-    int res;
-    char frompath[1000], topath[1000];
-
-    char *a = strstr(to, atoz);
-    if (a != NULL)
-        decryptAtbash(a);
-
-    char *b = strstr(from, rx);
-    if (b != NULL)
-    {
-        decryptRot13(b);
-        decryptAtbash(b);
-    }
-
-    char *c = strstr(to, rx);
-    if (c != NULL)
-    {
-        decryptRot13(c);
-        decryptAtbash(c);
-    }
-
-    sprintf(frompath, "%s%s", dirPath, from);
-    sprintf(topath, "%s%s", dirPath, to);
-
-    res = rename(frompath, topath);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {frompath, topath};
-    logFile("INFO", "RENAME", desc, 2);
-
-    if (c != NULL)
-    {
-        encrypt2(topath);
-    }
-
-    if (b != NULL && c == NULL)
-    {
-        decrypt2(topath);
-    }
-
-    if (strstr(to, aisa) != NULL)
-    {
-        encryptBinary(topath);
-    }
-
-    if (strstr(from, aisa) != NULL && strstr(to, aisa) == NULL)
-    {
-        decryptBinary(topath);
-    }
 }
 
 static int xmp_link(const char *from, const char *to)
@@ -976,78 +1113,6 @@ static int xmp_chown(const char *path, uid_t uid, gid_t gid)
     return 0;
 }
 
-static int xmp_truncate(const char *path, off_t size)
-{
-    int res;
-
-    res = truncate(path, size);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {path};
-    logFile("INFO", "TRUNCATE", desc, 1);
-
-    return 0;
-}
-
-static int xmp_utimens(const char *path, const struct timespec ts[2])
-{
-    int res;
-    struct timeval tv[2];
-
-    tv[0].tv_sec = ts[0].tv_sec;
-    tv[0].tv_usec = ts[0].tv_nsec / 1000;
-    tv[1].tv_sec = ts[1].tv_sec;
-    tv[1].tv_usec = ts[1].tv_nsec / 1000;
-
-    res = utimes(path, tv);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {path};
-    logFile("INFO", "UTIMENSAT", desc, 1);
-
-    return 0;
-}
-
-static int xmp_open(const char *path, struct fuse_file_info *fi)
-{
-    int res;
-
-    res = open(path, fi->flags);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {path};
-    logFile("INFO", "OPEN", desc, 1);
-
-    close(res);
-    return 0;
-}
-
-static int xmp_write(const char *path, const char *buf, size_t size,
-                     off_t offset, struct fuse_file_info *fi)
-{
-    int fd;
-    int res;
-
-    (void)fi;
-    fd = open(path, O_WRONLY);
-    if (fd == -1)
-        return -errno;
-
-    res = pwrite(fd, buf, size, offset);
-    if (res == -1)
-        res = -errno;
-
-    close(fd);
-
-    const char *desc[] = {path};
-    logFile("INFO", "WRITE", desc, 1);
-
-    return res;
-}
-
 static int xmp_statfs(const char *path, struct statvfs *stbuf)
 {
     int res;
@@ -1062,82 +1127,31 @@ static int xmp_statfs(const char *path, struct statvfs *stbuf)
     return 0;
 }
 
-static int xmp_create(const char *path, mode_t mode, struct fuse_file_info *fi)
-{
-
-    (void)fi;
-
-    int res;
-    res = creat(path, mode);
-    if (res == -1)
-        return -errno;
-
-    const char *desc[] = {path};
-    logFile("INFO", "CREATE", desc, 1);
-
-    close(res);
-
-    return 0;
-}
-
-static int xmp_release(const char *path, struct fuse_file_info *fi)
-{
-    /* Just a stub.	 This method is optional and can safely be left
-	   unimplemented */
-
-    (void)path;
-    (void)fi;
-
-    const char *desc[] = {path};
-    logFile("INFO", "RELEASE", desc, 1);
-
-    return 0;
-}
-
-static int xmp_fsync(const char *path, int isdatasync,
-                     struct fuse_file_info *fi)
-{
-    /* Just a stub.	 This method is optional and can safely be left
-	   unimplemented */
-
-    (void)path;
-    (void)isdatasync;
-    (void)fi;
-
-    const char *desc[] = {path};
-    logFile("INFO", "FSYNC", desc, 1);
-
-    return 0;
-}
-
 static struct fuse_operations xmp_oper = {
     .getattr = xmp_getattr,
-    .access = xmp_access,
-    .readlink = xmp_readlink,
     .readdir = xmp_readdir,
-    .mknod = xmp_mknod,
+    .read = xmp_read,
     .mkdir = xmp_mkdir,
-    .symlink = xmp_symlink,
-    .unlink = xmp_unlink,
     .rmdir = xmp_rmdir,
     .rename = xmp_rename,
+    .truncate = xmp_truncate,
+    .write = xmp_write,
+    .create = xmp_create,
+    .utimens = xmp_utimens,
+    .access = xmp_access,
+    .open = xmp_open,
+    .unlink = xmp_unlink,
+    .readlink = xmp_readlink,
+    .mknod = xmp_mknod,
+    .symlink = xmp_symlink,
     .link = xmp_link,
     .chmod = xmp_chmod,
     .chown = xmp_chown,
-    .truncate = xmp_truncate,
-    .utimens = xmp_utimens,
-    .open = xmp_open,
-    .read = xmp_read,
-    .write = xmp_write,
     .statfs = xmp_statfs,
-    .create = xmp_create,
-    .release = xmp_release,
-    .fsync = xmp_fsync,
 };
 
 int main(int argc, char *argv[])
 {
     umask(0);
-
     return fuse_main(argc, argv, &xmp_oper, NULL);
 }
