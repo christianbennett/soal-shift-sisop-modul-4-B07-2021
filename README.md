@@ -7,6 +7,8 @@
 ## Soal 1
 
 ## Soal 2
+Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada komputer mereka semakin aman. Berikut rancangan metode enkripsi tambahan yang dirancang oleh Sei
+
 
 ## Soal 3
 
