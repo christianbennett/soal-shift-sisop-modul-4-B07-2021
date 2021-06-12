@@ -164,51 +164,50 @@ void getDecimal(char *fname, char *bin, char *normalcase)
     normalcase[i - startId] = '\0';
 }
 
-
 void decryptBinary(char *fpath)
 {
-    chdir(fpath);
-    DIR *dp;
-    struct dirent *dir;
-    struct stat lol;
-    dp = opendir(".");
-    if (dp == NULL)
-        return;
+	chdir(fpath);
+	DIR *dp;
+	struct dirent *dir;
+	struct stat st;
+	dp = opendir(".");
+	if (dp == NULL)
+		return;
 
-    char dirPath[1000];
-    char filePath[1000];
-    char filePathDecimal[1000];
+	char dirPath[1000];
+	char filePath[1000];
+	char filePathDecimal[1000];
 
-    while ((dir = readdir(dp)) != NULL)
-    {
-        if (stat(dir->d_name, &lol) < 0)
-            ;
-        else if (S_ISDIR(lol.st_mode))
-        {
-            if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
-                continue;
-            sprintf(dirPath, "%s/%s", fpath, dir->d_name);
-            decryptBinary(dirPath);
-        }
-        else
-        {
-            sprintf(filePath, "%s/%s", fpath, dir->d_name);
-            char fname[1000], bin[1000], normalcase[1000], clearPath[1000];
+	while ((dir = readdir(dp)) != NULL)
+	{
+		if (stat(dir->d_name, &st) < 0)
+			;
+		else if (S_ISDIR(st.st_mode))
+		{
+			if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+				continue;
+			sprintf(dirPath, "%s/%s", fpath, dir->d_name);
+			decryptBinary(dirPath);
+		}
+		else
+		{
+			sprintf(filePath, "%s/%s", fpath, dir->d_name);
+			char fname[1000], bin[1000], normalcase[1000], clearPath[1000];
 
-            strcpy(fname, dir->d_name);
-            char *ext = strrchr(fname, '.');
-            int dec = convertDec(ext + 1);
-            for (int i = 0; i < strlen(fname) - strlen(ext); i++)
-                clearPath[i] = fname[i];
+			strcpy(fname, dir->d_name);
+			char *ext = strrchr(fname, '.');
+			int dec = convertDec(ext + 1);
+			for (int i = 0; i < strlen(fname) - strlen(ext); i++)
+				clearPath[i] = fname[i];
 
-            char *ext2 = strrchr(clearPath, '.');
-            convertDecToBin(dec, bin, strlen(clearPath) - strlen(ext2));
-            getDecimal(clearPath, bin, normalcase);
-            sprintf(filePathDecimal, "%s/%s", fpath, normalcase);
-            rename(filePath, filePathDecimal);
-        }
-    }
-    closedir(dp);
+			char *ext2 = strrchr(clearPath, '.');
+			decToBin(dec, bin, strlen(clearPath) - strlen(ext2));
+			getDecimal(clearPath, bin, normalcase);
+			sprintf(filePathDecimal, "%s/%s", fpath, normalcase);
+			rename(filePath, filePathDecimal);
+		}
+	}
+	closedir(dp);
 }
 ```
 
