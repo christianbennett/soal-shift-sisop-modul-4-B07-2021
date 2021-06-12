@@ -17,8 +17,8 @@
 #include <time.h>
 
 //path yang dibutuhkan
-static const char *dirPath = "/home/hanifa/Downloads";
-static const char *logPath = "/home/hanifa/SinSeiFS.log";
+static const char *dirPath = "/home/bennett/Downloads";
+static const char *logPath = "/home/bennett/SinSeiFS.log";
 
 //array untuk menampung string yang diperlukan
 char *key = "SISOP";
