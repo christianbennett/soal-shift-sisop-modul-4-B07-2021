@@ -57,14 +57,14 @@ int dotId(char *path)
 }
 
 //mendapat letak /
-int slashId(char *path, int mentok)
+int slashId(char *path, int end)
 {
 	for (int i = 0; i < strlen(path); i++)
 	{
 		if (path[i] == '/')
 			return i + 1;
 	}
-	return mentok;
+	return end;
 }
 
 void encryptAtbash(char *path)
