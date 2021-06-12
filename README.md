@@ -211,8 +211,25 @@ void decryptBinary(char *fpath)
     closedir(dp);
 }
 ```
+
+Berikut merupakan kondisi awal dari direktori `a`:
+
+![a](Screenshots/a.png)
+
+Lalu dilakukan encode dengan cara melakukan rename dengan command `mv a A_is_a_a`:
+
+![encode](Screenshots/encode.png)
+
+Setelah nama direktori diubah dengan awalan `A_is_a_`, isinya pun terenkode seperti permintaan soal: 
+
+![aisaa](Screenshots/aisaa.png)
+
+Lalu untuk decode, direktori direname kembali menjadi `a`dengan command `mv A_is_a_a a`, lalu hasilnya kembali menjadi seperti kondisi semula sebagai berikut:
+
+![decode](Screenshots/decode.png)
+
 ### Kesulitan ###
-Karena pada awalnya program tidak bisa di run, maka kami kesulitan untuk bagaimana cara jalannya program. Selain itu terdapat juga kesulitan pada saat ingin mengconvert string untuk fungsi biner dan desimalnya saat ingin diappend ke nama direktori.
+Karena pada awalnya program tidak bisa di run, maka kami kesulitan untuk bagaimana cara jalannya program. Selain itu terdapat juga kesulitan pada saat ingin mengconvert string untuk fungsi biner dan desimalnya saat ingin diappend ke nama direktori. Pengimplementasian fungsi dan parameter yang dibutuhkan juga sangat membingungkan dikarenakan resource informasi yang kurang.
 
 ## Soal 4
 
@@ -249,6 +266,10 @@ void logFile(char *level, char *command, const char *desc[], int descLen)
 ```
 
 Pembuatan log file dilakukan dengan cara seperti atas. Pertama-tama fungsi membuat file logPath yang sudah terdefinisi di awal yaitu:  `static const char *logPath = "/home/USER/SinSeiFS.log";`. Lalu dilakukan pemanggilan fungsi time untuk menginisialisasi waktu, lalu format output menyesuaikan soal. Disini kami menambahkan parameter `int descLen`, yaitu sebagai parameter jumlah argumen agar tidak perlu membuat fungsi baru yang banyak argumennya lebih dari satu.
+
+Berikut merupakan isi dari log file yang kami buat: 
+
+![logfile](Screenshots/log.png)
 
 ### Kesulitan ###
 
