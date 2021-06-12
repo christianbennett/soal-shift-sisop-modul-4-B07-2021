@@ -1115,6 +1115,8 @@ static int xmp_unlink(const char *path)
 		sprintf(fpath, "%s%s", dirPath, path);
 	}
 
+	res = unlink(fpath);
+
 	const char *desc[] = {path};
 	logFile("WARNING", "UNLINK", desc, 1);
 
