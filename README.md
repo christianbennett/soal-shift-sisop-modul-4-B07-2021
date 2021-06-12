@@ -65,40 +65,40 @@ Lalu kita gunakan di fungsi enkripsi untuk diappend pada nama file.
 ```c
 void encryptBinary(char *fpath)
 {
-    chdir(fpath);
-    DIR *dp;
-    struct dirent *dir;
-    struct stat lol;
-    dp = opendir(".");
-    if (dp == NULL)
-        return;
+	chdir(fpath);
+	DIR *dp;
+	struct dirent *dir;
+	struct stat st;
+	dp = opendir(".");
+	if (dp == NULL)
+		return;
 
-    char dirPath[1000];
-    char filePath[1000];
-    char filePathBinary[1000];
+	char dirPath[1000];
+	char filePath[1000];
+	char filePathBinary[1000];
 
-    while ((dir = readdir(dp)) != NULL)
-    {
-        if (stat(dir->d_name, &lol) < 0)
-            ;
-        else if (S_ISDIR(lol.st_mode))
-        {
-            if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
-                continue;
-            sprintf(dirPath, "%s/%s", fpath, dir->d_name);
-            encryptBinary(dirPath);
-        }
-        else
-        {
-            sprintf(filePath, "%s/%s", fpath, dir->d_name);
-            char bin[1000], lowercase[1000];
-            getBinary(dir->d_name, bin, lowercase);
-            int dec = convertBinToDec(bin);
-            sprintf(filePathBinary, "%s/%s.%d", fpath, lowercase, dec);
-            rename(filePath, filePathBinary);
-        }
-    }
-    closedir(dp);
+	while ((dir = readdir(dp)) != NULL)
+	{
+		if (stat(dir->d_name, &st) < 0)
+			;
+		else if (S_ISDIR(st.st_mode))
+		{
+			if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+				continue;
+			sprintf(dirPath, "%s/%s", fpath, dir->d_name);
+			encryptBinary(dirPath);
+		}
+		else
+		{
+			sprintf(filePath, "%s/%s", fpath, dir->d_name);
+			char bin[1000], lowercase[1000];
+			getBinary(dir->d_name, bin, lowercase);
+			int dec = binToDec(bin);
+			sprintf(filePathBinary, "%s/%s.%d", fpath, lowercase, dec);
+			rename(filePath, filePathBinary);
+		}
+	}
+	closedir(dp);
 }
 ```
 
