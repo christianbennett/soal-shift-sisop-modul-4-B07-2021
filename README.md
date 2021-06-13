@@ -139,7 +139,7 @@ int slashId(char *path, int end)
 	return end;
 }
 ```
-Ketika fungsi diatas, berfungsi untuk membantu mendapatkan batas awal dan akhir dari encode/decode pada folder/file yang diinginkan untuk diencode ataupun decode. Misal, apabila yang diencode ialah suatu file yang memiliki extension txt maka yang diencode ialah nama file nya, extensionnya tidak.
+Ketiga fungsi diatas, berfungsi untuk membantu mendapatkan batas awal dan akhir dari encode/decode pada folder/file yang diinginkan untuk diencode ataupun decode. Misal, apabila yang diencode ialah suatu file yang memiliki extension txt maka yang diencode ialah nama file nya, extensionnya tidak.
 
 Apabila dibuat folder baru yang diawali dengan `AtoZ_` maka didalam folder tersebut akan terencode
 
