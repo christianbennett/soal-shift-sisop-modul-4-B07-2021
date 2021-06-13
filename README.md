@@ -6,6 +6,167 @@
 
 ## Soal 1
 
+Di suatu jurusan, terdapat admin lab baru yang super duper gabut, ia bernama Sin. Sin baru menjadi admin di lab tersebut selama 1 bulan. Selama sebulan tersebut ia bertemu orang-orang hebat di lab tersebut, salah satunya yaitu Sei. Sei dan Sin akhirnya berteman baik. Karena belakangan ini sedang ramai tentang kasus keamanan data, mereka berniat membuat filesystem dengan metode encode yang mutakhir. Berikut adalah filesystem rancangan Sin dan Sei :
+```    
+NOTE : 
+Semua file yang berada pada direktori harus ter-encode menggunakan Atbash cipher(mirror).
+Misalkan terdapat file bernama kucinglucu123.jpg pada direktori DATA_PENTING
+“AtoZ_folder/DATA_PENTING/kucinglucu123.jpg” → “AtoZ_folder/WZGZ_KVMGRMT/pfxrmtofxf123.jpg”
+Note : filesystem berfungsi normal layaknya linux pada umumnya, Mount source (root) filesystem adalah directory /home/[USER]/Downloads, dalam penamaan file ‘/’ diabaikan, dan ekstensi tidak perlu di-encode.
+Referensi : https://www.dcode.fr/atbash-cipher
+```
+A. Jika sebuah direktori dibuat dengan awalan “AtoZ_”, maka direktori tersebut akan menjadi direktori ter-encode.
+
+B. Jika sebuah direktori di-rename dengan awalan “AtoZ_”, maka direktori tersebut akan menjadi direktori ter-encode.
+
+C. Apabila direktori yang terenkripsi di-rename menjadi tidak ter-encode, maka isi direktori tersebut akan terdecode.
+
+D. Setiap pembuatan direktori ter-encode (mkdir atau rename) akan tercatat ke sebuah log. Format : /home/[USER]/Downloads/[Nama Direktori] → /home/[USER]/Downloads/AtoZ_[Nama Direktori]
+
+E. Metode encode pada suatu direktori juga berlaku terhadap direktori yang ada di dalamnya.(rekursif)
+
+
+
+Dalam melakukan encode ataupun decode, menggunakan atbash cipher yang berikut ini isi fungsinya
+
+```c
+void encryptAtbash(char *path)
+{
+	if (!strcmp(path, ".") || !strcmp(path, ".."))
+		return;
+
+	printf("encrypt path Atbash: %s\n", path);
+
+	int endId = extensionId(path);
+	if (endId == strlen(path))
+		endId = dotId(path);
+	int startId = slashId(path, 0);
+
+	for (int i = startId; i < endId; i++)
+	{
+		if (path[i] != '/' && isalpha(path[i]))
+		{
+			char tmp = path[i];
+			if (isupper(path[i]))
+				tmp -= 'A';
+			else
+				tmp -= 'a';
+			tmp = 25 - tmp; //Atbash cipher
+			if (isupper(path[i]))
+				tmp += 'A';
+			else
+				tmp += 'a';
+			path[i] = tmp;
+		}
+	}
+}
+
+void decryptAtbash(char *path)
+{
+	if (!strcmp(path, ".") || !strcmp(path, ".."))
+		return;
+
+	printf("decrypt path Atbash: %s\n", path);
+
+	int endId = extensionId(path);
+	if (endId == strlen(path))
+		endId = dotId(path);
+	int startId = slashId(path, endId);
+
+	for (int i = startId; i < endId; i++)
+	{
+		if (path[i] != '/' && isalpha(path[i]))
+		{
+			char tmp = path[i];
+			if (isupper(path[i]))
+				tmp -= 'A';
+			else
+				tmp -= 'a';
+			tmp = 25 - tmp; //Atbash cipher
+			if (isupper(path[i]))
+				tmp += 'A';
+			else
+				tmp += 'a';
+			path[i] = tmp;
+		}
+	}
+}
+```
+Fungsi ini akan mengenkripsi nama asli dari folder atau pun file yang ada di dalam folder yang namanya diawali dengan `AtoZ_`.
+Didalam fungsi atbash cipher ini terdapat beberapa fungsi yang dapat membantu memudahkan mendapatkan nama dari folder yang mau diencode namanya. Ada fungsi `dotId`, `slashId`, dan `extensionId`.
+
+```c
+//mendapatkan lokasi extension
+int extensionId(char *path)
+{
+	int ada = 0;
+	for (int i = strlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '.')
+		{
+			if (ada == 1)
+				return i;
+			else
+				ada = 1;
+		}
+	}
+	return strlen(path);
+}
+```
+
+```c
+//mendapatkan lokasi "."
+int dotId(char *path)
+{
+	for (int i = strlen(path) - 1; i >= 0; i--)
+	{
+		if (path[i] == '.')
+			return i;
+	}
+	return strlen(path);
+}
+```
+
+```c
+//mendapat letak /
+int slashId(char *path, int end)
+{
+	for (int i = 0; i < strlen(path); i++)
+	{
+		if (path[i] == '/')
+			return i + 1;
+	}
+	return end;
+}
+```
+Ketika fungsi diatas, berfungsi untuk membantu mendapatkan batas awal dan akhir dari encode/decode pada folder/file yang diinginkan untuk diencode ataupun decode. Misal, apabila yang diencode ialah suatu file yang memiliki extension txt maka yang diencode ialah nama file nya, extensionnya tidak.
+
+Apabila dibuat folder baru yang diawali dengan `AtoZ_` maka didalam folder tersebut akan terencode
+
+![Pada folder download](https://user-images.githubusercontent.com/80946219/121792692-7e02d000-cc22-11eb-96c5-021ccdf3b84e.png)
+
+![fuse](https://user-images.githubusercontent.com/80946219/121792717-a4287000-cc22-11eb-9c7e-919813d6bf48.png)
+
+Apabila nama folder direname menjadi diawali dengan `AtoZ_` maka didalam folder tersebut akan terencode
+
+![rename1](https://user-images.githubusercontent.com/80946219/121792926-c3280180-cc24-11eb-9e3e-9e70eaed2e31.png)
+
+![rename2](https://user-images.githubusercontent.com/80946219/121792811-96bfb580-cc23-11eb-8f96-cb71802f25ba.png)
+
+![hasilrename](https://user-images.githubusercontent.com/80946219/121792768-1bf69a80-cc23-11eb-9d36-4ae9169f86bb.png)
+
+Apabila folder yang sebelumnya bernama `AtoZ_` dihapus `AtoZ_`nya, maka didalam folder tersebut akan terdecode
+
+![ilang](https://user-images.githubusercontent.com/80946219/121792903-94119000-cc24-11eb-8502-8e6c0df673ae.png)
+
+![ilang2](https://user-images.githubusercontent.com/80946219/121792887-793f1b80-cc24-11eb-82d8-dd887d931d90.png)
+
+![hasililang](https://user-images.githubusercontent.com/80946219/121792874-6593b500-cc24-11eb-95e3-21afd439623a.png)
+
+
+Kendala:
+Masih kurang mengerti mengenai penggunaan fuse.
+
 ## Soal 2
 Sei mengusulkan untuk membuat metode enkripsi tambahan agar data pada komputer mereka semakin aman. Berikut rancangan metode enkripsi tambahan yang dirancang oleh Sei
 
