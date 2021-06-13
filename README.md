@@ -364,6 +364,9 @@ static int xmp_rename(const char *from, const char *to)
 }
 
 ```
+Berikut ini, merupakan tampilan ketika belum dilakukan `rename` pada direktori
+<img width="600" alt="sisopfix" src="https://user-images.githubusercontent.com/73489643/121799294-81637f00-cc55-11eb-8209-344167fb9d25.PNG">
+<img width="600" alt="sisopfix2" src="https://user-images.githubusercontent.com/73489643/121799297-8294ac00-cc55-11eb-8ed9-9ecb36add60d.PNG">
 
 ## Soal 3
 
