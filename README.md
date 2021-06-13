@@ -185,6 +185,125 @@ Suatu_File.txt.0000
 Suatu_File.txt.0001
 Suatu_File.txt.0002
 ```
+Pada fungsi `enkripsi2` akan dijalankan ketika pada direktori di rename menjadi awalan `RX_`, maka pada fuse, nama file yang berada di dalam direktori tersebut akan berubah namanya
+
+```c
+//no2
+void enkripsi2(char *fpath)
+{
+	chdir(fpath);
+	DIR *dp;
+	struct dirent *dir;
+
+	dp = opendir(".");
+	if (dp == NULL)
+		return;
+	struct stat st;
+	char dirPath[1000];
+	char filePath[1000];
+
+	while ((dir = readdir(dp)) != NULL)
+	{
+		printf("dirname %s\n", dir->d_name);
+		printf("%s/%s\n", fpath, dir->d_name);
+		if (stat(dir->d_name, &st) < 0)
+			;
+		else if (S_ISDIR(st.st_mode))
+		{
+			if (strcmp(dir->d_name, ".") == 0 || strcmp(dir->d_name, "..") == 0)
+				continue;
+			sprintf(dirPath, "%s/%s", fpath, dir->d_name);
+			enkripsi2(dirPath);
+			printf("dirpath %s\n", dirPath);
+		}
+		else
+		{
+			sprintf(filePath, "%s/%s", fpath, dir->d_name);
+			FILE *input = fopen(filePath, "r");
+			if (input == NULL)
+				return;
+			int bytes_read, count = 0;
+			void *buffer = malloc(1024);
+			while ((bytes_read = fread(buffer, 1, 1024, input)) > 0)
+			{
+				char newFilePath[1000];
+				sprintf(newFilePath, "%s.%04d", filePath, count);
+				count++;
+				FILE *output = fopen(newFilePath, "w+");
+				if (output == NULL)
+					return;
+				fwrite(buffer, 1, bytes_read, output);
+				fclose(output);
+				memset(buffer, 0, 1024);
+			}
+			fclose(input);
+			printf("filepath %s\n", filePath);
+			remove(filePath);
+		}
+	}
+	closedir(dp);
+}
+
+```
+
+Untuk fungsi `dekripsi2` merupakan fungsi ketika direktori dihapus atau direname dengan menghilangkan `RX_` pada awalannya, maka nama file di dalam direktori tersebut akan kembali seperti aslinya.
+
+```c
+void dekripsi2(char *dir)
+{
+	chdir(dir);
+	DIR *dp;
+	struct dirent *de;
+	struct stat st;
+	dp = opendir(".");
+	if (dp == NULL)
+		return;
+
+	char dirPath[1000];
+	char filePath[1000];
+
+	while ((de = readdir(dp)) != NULL)
+	{
+		if (stat(de->d_name, &st) < 0)
+			;
+		else if (S_ISDIR(st.st_mode))
+		{
+			if (strcmp(de->d_name, ".") == 0 || strcmp(de->d_name, "..") == 0)
+				continue;
+			sprintf(dirPath, "%s/%s", dir, de->d_name);
+			dekripsi2(dirPath);
+		}
+		else
+		{
+			sprintf(filePath, "%s/%s", dir, de->d_name);
+			filePath[strlen(filePath) - 5] = '\0';
+			FILE *check = fopen(filePath, "r");
+			if (check != NULL)
+				return;
+			FILE *file = fopen(filePath, "w");
+			int count = 0;
+			char topath[1000];
+			sprintf(topath, "%s.%04d", filePath, count);
+			void *buffer = malloc(1024);
+			while (1)
+			{
+				FILE *op = fopen(topath, "rb");
+				if (op == NULL)
+					break;
+				size_t readSize = fread(buffer, 1, 1024, op);
+				fwrite(buffer, 1, readSize, file);
+				fclose(op);
+				remove(topath);
+				count++;
+				sprintf(topath, "%s.%04d", filePath, count);
+			}
+			free(buffer);
+			fclose(file);
+		}
+	}
+	closedir(dp);
+}
+```
 
 
 
