@@ -304,8 +304,66 @@ void dekripsi2(char *dir)
 	closedir(dp);
 }
 ```
+Fungsi `rename` ini untuk mendeteksi apakah direktori tersebut diawali dengan `RX_`
 
+```c
+static int xmp_rename(const char *from, const char *to)
+{
+	int res;
+	char frompath[1000], topath[1000];
 
+	char *a = strstr(to, atoz);
+	if (a != NULL)
+		decryptAtbash(a);
+
+	char *b = strstr(from, rx);
+	if (b != NULL)
+	{
+		decryptRot13(b);
+		decryptAtbash(b);
+	}
+
+	char *c = strstr(to, rx);
+	if (c != NULL)
+	{
+		decryptRot13(c);
+		decryptAtbash(c);
+	}
+
+	sprintf(frompath, "%s%s", dirPath, from);
+	sprintf(topath, "%s%s", dirPath, to);
+
+	res = rename(frompath, topath);
+	if (res == -1)
+		return -errno;
+
+	const char *desc[] = {frompath, topath};
+	logFile("INFO", "RENAME", desc, 2);
+
+	if (c != NULL)
+	{
+		enkripsi2(topath);
+	}
+
+	if (b != NULL && c == NULL)
+	{
+		dekripsi2(topath);
+	}
+
+	if (strstr(to, aisa) != NULL)
+	{
+		encryptBinary(topath);
+	}
+
+	if (strstr(from, aisa) != NULL && strstr(to, aisa) == NULL)
+	{
+		decryptBinary(topath);
+	}
+
+	return 0;
+}
+
+```
 
 ## Soal 3
 
