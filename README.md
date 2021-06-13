@@ -372,6 +372,7 @@ Dan berikut ini, merupakan tampilan ketika direktori sudah direname dengan awala
 <img width="920" alt="sisopfix3" src="https://user-images.githubusercontent.com/73489643/121799364-e028f880-cc55-11eb-9447-bda0de3674ee.PNG">
 <img width="920" alt="sisopfix4" src="https://user-images.githubusercontent.com/73489643/121799367-e15a2580-cc55-11eb-98fe-8f364f731735.PNG">
 
+Kendala: Masih kurang mengerti mengenai penggunaan fuse.
 ## Soal 3
 
 Melakukan enkripsi dan dekripsi jika direktori dibuat dan diberi nama atau direname dengan awalan `A_is_a`.
